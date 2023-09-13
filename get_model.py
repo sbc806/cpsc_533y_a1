@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from collections import OrderedDict
 
 
 def get_model(config):
@@ -29,13 +30,13 @@ class FcNet(nn.Module):
         #
         # Hint: nn.Sequential().
         
-        model_layers = {}
+        model_layers = OrderedDict()
         for i in range(0, len(outc_list)):
             if i == 0:
                 model_layers[f'Linear-{i}'] = nn.Linear(inc, outc_list[i], bias=True)
             else:
                 model_layers[f'Linear-{i}'] = nn.Linear(outc_list[i-1], outc_list[i], bias=True)
-            model_layers[f'ReLU-{i}']=nn.ReLU(in_place=True)
+            model_layers[f'ReLU-{i}'] = nn.ReLU(in_place=True)
         model_layers['output'] = nn.Linear(outc_list[-1], num_classes, bias=True)
 
         # layer_sizes = [inc] + outc_list + [num_classes]
