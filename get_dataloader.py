@@ -52,7 +52,7 @@ def get_dataloader(config, mode):
         print(f"Number of single batch samples: {num_all}")
     else:
         raise NotImplementedError
-
+    print("Hello")
     return loader_list
 
 
