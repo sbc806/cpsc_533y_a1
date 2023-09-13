@@ -25,12 +25,12 @@ class FcNet(nn.Module):
         self.config = config
         num_classes = config.num_classes
         outc_list = config.outc_list
-        print("Hi")
+        print("Hello")
         # TODO: Compose the model according to configuration specs
         #
         # Hint: nn.Sequential().
         
-        model_layers = OrderedDict()
+        model_layers = torch.nn.ModuleDict()
         for i in range(0, len(outc_list)):
             if i == 0:
                 model_layers[f'Linear-{i}'] = nn.Linear(inc, outc_list[i], bias=True)
