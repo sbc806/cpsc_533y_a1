@@ -17,7 +17,7 @@ def get_dataloader(config, mode):
         dataset = MnistptsDataset(config, "train")
     else:
         dataset = MnistptsDataset(config, mode)
-        print(dataset)
+        print("Hi",len(dataset))
     loader = functools.partial(
         DataLoader,
         batch_size=config.batch_size,
