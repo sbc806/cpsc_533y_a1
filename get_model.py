@@ -30,7 +30,7 @@ class FcNet(nn.Module):
         #
         # Hint: nn.Sequential().
         
-        model_layers = torch.nn.ModuleDict()
+        model_layers = torch.nn.ModuleDict({})
         for i in range(0, len(outc_list)):
             if i == 0:
                 model_layers[f'Linear-{i}'] = nn.Linear(inc, outc_list[i], bias=True)
