@@ -35,6 +35,7 @@ def get_dataloader(config, mode):
     # TODO: We also want to create a dataset that contains only a single mini
     # batch of samples that will be used to perform sanity check on the
     # training code.
+    
     if mode == "train":
         ratio_tr_data = config.ratio_tr_data
         num_all = len(dataset)
@@ -77,10 +78,12 @@ class MnistptsDataset(data.Dataset):
 
         # TODO: Our dataset is small. Load the entire dataset into memory to
         # avoid excessive disk access!
+        self.pts_list, self.labels = load_mnistpts('data_dump', mode)
 
     def __len__(self):
         """Return the length of dataset."""
         # TODO: return the length of dataset.
+        return len(self.pts_list)
 
     def random_sampling(self, pts, num_pts):
         """Sampling points from point cloud.
