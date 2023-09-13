@@ -34,8 +34,7 @@ def get_dataloader(config, mode):
     # dataset, while the validation set does not need to be.
     # TODO: We also want to create a dataset that contains only a single mini
     # batch of samples that will be used to perform sanity check on the
-    # training code.
-    
+    # training code.    
     if mode == "train":
         ratio_tr_data = config.ratio_tr_data
         num_all = len(dataset)
@@ -43,14 +42,32 @@ def get_dataloader(config, mode):
 
         print(f"Number of training samples: {num_tr}")
         print(f"Number of valid samples: {num_all - num_tr}")
+        
+        # Create the two subsets after shuffling
+        random_ordering = torch.randperm(num_all)
+        train_subset = Subset(dataset, random_ordering[0:num_tr])
+        val_subset = Subset(dataset, random_ordering[num_tr:])
+        # Create the data loaders
+        train_loader = loader(dataset=train_subset, shuffle=True)
+        val_loader = loader(dataset=val_subset, shuffle=False)
+        loader_list.append(train_loader)
+        loader_list.append(val_loader)
     elif mode == "test":
         num_all = len(dataset)
 
         print(f"Number of test samples: {num_all}")
+        
+        test_loader = loader(dataset=dataset, shuffle=False)
+        loader_list.append(test_loader)
     elif mode == 'single_batch':
         num_all = config.batch_size
 
         print(f"Number of single batch samples: {num_all}")
+
+        random_ordering = torch.randperm(len(dataset))
+        batch_subset = Subset(dataset, random_ordering[0: num_all])
+        batch_loader = loader(dataset=batch_subset, shuffle=False)
+        loader_list.append(batch_loader)
     else:
         raise NotImplementedError
     print("Hello")
@@ -117,5 +134,5 @@ class MnistptsDataset(data.Dataset):
 
         # TODO: get item from dataset.
         # Note that we expect: pc (np.float32 type), label(np.int)
-
+        data = self.pts_list[index], self.labels[index]
         return data
