@@ -134,5 +134,6 @@ class MnistptsDataset(data.Dataset):
 
         # TODO: get item from dataset.
         # Note that we expect: pc (np.float32 type), label(np.int)
-        data = self.pts_list[index], self.labels[index]
+        data = {"pc": self.pts_list[index],
+                "label": self.labels[index]}
         return data
