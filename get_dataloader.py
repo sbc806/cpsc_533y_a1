@@ -17,7 +17,6 @@ def get_dataloader(config, mode):
         dataset = MnistptsDataset(config, "train")
     else:
         dataset = MnistptsDataset(config, mode)
-        print("Hi",len(dataset))
     loader = functools.partial(
         DataLoader,
         batch_size=config.batch_size,
@@ -70,7 +69,7 @@ def get_dataloader(config, mode):
         loader_list.append(batch_loader)
     else:
         raise NotImplementedError
-    print("Hello")
+    
     return loader_list
 
 

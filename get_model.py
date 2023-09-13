@@ -24,10 +24,16 @@ class FcNet(nn.Module):
         self.config = config
         num_classes = config.num_classes
         outc_list = config.outc_list
-
+        print("Hi")
         # TODO: Compose the model according to configuration specs
         #
         # Hint: nn.Sequential().
+        layer_sizes = [inc] + outc_list + [num_classes]
+        model_layers = []
+        for in_sz, out_sz in zip(layer_sizes[:-1], layer_sizes[1:]):
+          model_layers.append(nn.Linear(in_sz, out_sz, bias=True))
+          model_layers.append(nn.ReLU())
+        self.model = nn.Sequential(*model_layers)
 
         # init weights
         self.apply(self._init_weights)
@@ -45,7 +51,7 @@ class FcNet(nn.Module):
         Args:
             x (array): BxNx2, input tensor.
         """
-        if self.config.order_pts:
+        # if self.config.order_pts:
             # TODO: Order point clouds according to its x coordinates.
             #
             # Hint: Use `torch.sort` to get the ordered index
@@ -53,7 +59,8 @@ class FcNet(nn.Module):
 
         # TODO: Define the forward  pass and get the logits for classification.
 
-        return F.log_softmax(logits, dim=1)
+        # return F.log_softmax(logits, dim=1)
+        pass
 
     def get_loss(self, pred, label):
         """Compute loss by comparing prediction and labels.
