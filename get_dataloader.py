@@ -78,7 +78,9 @@ class MnistptsDataset(data.Dataset):
 
         # TODO: Our dataset is small. Load the entire dataset into memory to
         # avoid excessive disk access!
-        self.pts_list, self.labels = load_mnistpts('data_dump', mode)
+        self.pts_list, self.labels = mnist_helper.load_mnistpts('data_dump', mode)
+        self.pts_list = np.array(self.pts_list).astype(np.float32)
+        self.labels = np.array(self.labels).astype(int)
 
     def __len__(self):
         """Return the length of dataset."""
@@ -101,9 +103,12 @@ class MnistptsDataset(data.Dataset):
         # Note: Random state might improperly be shared among threads. This is
         #   especially true if you use numpy to sample. Use PyTorch!
         if self.random_sample:
-            pass
+            # pass
+            random_ordering = torch.randperm(len(self.pts_list))
+            pts_sampled = self.pts_list[random_ordering[0: num_pts]]
         else:
-            pass
+            # pass
+            pts_sampled = self.pts_list[0: num_pts]
 
         return pts_sampled
 
