@@ -25,7 +25,7 @@ class FcNet(nn.Module):
         self.config = config
         num_classes = config.num_classes
         outc_list = config.outc_list
-        print("Hello")
+        print("Hi")
         # TODO: Compose the model according to configuration specs
         #
         # Hint: nn.Sequential().
@@ -44,7 +44,7 @@ class FcNet(nn.Module):
         # for in_sz, out_sz in zip(layer_sizes[:-1], layer_sizes[1:]):
           # model_layers.append(nn.Linear(in_sz, out_sz, bias=True))
           # model_layers.append(nn.ReLU())
-        self.net = nn.Sequential(*model_layers)
+        self.net = nn.Sequential(model_layers)
 
         # init weights
         self.apply(self._init_weights)
