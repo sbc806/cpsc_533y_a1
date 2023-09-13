@@ -36,7 +36,7 @@ class FcNet(nn.Module):
                 model_layers[f'Linear-{i}'] = nn.Linear(inc, outc_list[i], bias=True)
             else:
                 model_layers[f'Linear-{i}'] = nn.Linear(outc_list[i-1], outc_list[i], bias=True)
-            model_layers[f'ReLU-{i}'] = nn.ReLU(in_place=True)
+            model_layers[f'ReLU-{i}'] = nn.ReLU(inplace=True)
         model_layers['output'] = nn.Linear(outc_list[-1], num_classes, bias=True)
 
         # layer_sizes = [inc] + outc_list + [num_classes]
