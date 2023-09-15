@@ -65,7 +65,7 @@ def get_dataloader(config, mode):
 
         random_ordering = torch.randperm(len(dataset))
         batch_subset = Subset(dataset, random_ordering[0: num_all])
-        batch_loader = loader(dataset=batch_subset, shuffle=False)
+        batch_loader = loader(dataset=batch_subset, shuffle=True)
         loader_list.append(batch_loader)
     else:
         raise NotImplementedError
@@ -101,7 +101,7 @@ class MnistptsDataset(data.Dataset):
     def __len__(self):
         """Return the length of dataset."""
         # TODO: return the length of dataset.
-        return len(self.pts_list)
+        return len(self.labels)
 
     def random_sampling(self, pts, num_pts):
         """Sampling points from point cloud.
