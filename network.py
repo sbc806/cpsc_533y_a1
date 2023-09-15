@@ -46,6 +46,16 @@ class Network(object):
 
         # TODO: Draw plots for the training and validation results, as shown in
         # the example results. Use matplotlib's subplots.
+        fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1)
+
+        x_points = [i for i in range(0, self.config.num_epochs)]
+        ax1.plot(x_points, self.train_losses)
+        ax1.set_title('Training loss curve')
+        ax2.plot(x_points, self.valid_oas)
+        ax2.set_title('Validation accuracy curve')
+
+        fig.suptitle('Visualization of training logs')
+        plt.show()
 
     def _save(self, pt_file):
         """Saving trained model."""

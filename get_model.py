@@ -25,7 +25,7 @@ class FcNet(nn.Module):
         self.config = config
         num_classes = config.num_classes
         outc_list = config.outc_list
-        print("Hi")
+        
         # TODO: Compose the model according to configuration specs
         #
         # Hint: nn.Sequential().
@@ -69,9 +69,9 @@ class FcNet(nn.Module):
             #      and then use `torch.gather` to get the ordered points.
 
         # TODO: Define the forward  pass and get the logits for classification.
-
-        # return F.log_softmax(logits, dim=1)
-        pass
+        flattened_x = torch.flatten(x, start_dim=1)
+        logits = self.net(flattened_x)
+        return F.log_softmax(logits, dim=1)
 
     def get_loss(self, pred, label):
         """Compute loss by comparing prediction and labels.

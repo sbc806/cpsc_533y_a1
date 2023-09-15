@@ -94,7 +94,7 @@ class MnistptsDataset(data.Dataset):
 
         # TODO: Our dataset is small. Load the entire dataset into memory to
         # avoid excessive disk access!
-        self.pts_list, self.labels = mnist_helper.load_mnistpts('data_dump', mode)
+        self.pts_list, self.labels = mnist_helper.load_mnistpts(config.data_mnistpts_dir, mode)
         self.pts_list = np.array(self.pts_list).astype(np.float32)
         self.labels = np.array(self.labels).astype(int)
 
