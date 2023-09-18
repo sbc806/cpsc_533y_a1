@@ -63,6 +63,7 @@ def get_dataloader(config, mode):
 
         print(f"Number of single batch samples: {num_all}")
 
+        # Get a random single batch from the dataset
         random_ordering = torch.randperm(len(dataset))
         batch_subset = Subset(dataset, random_ordering[0: num_all])
         batch_loader = loader(dataset=batch_subset, shuffle=True)

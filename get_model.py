@@ -71,9 +71,6 @@ class FcNet(nn.Module):
         # TODO: Define the forward  pass and get the logits for classification.
         flattened_x = torch.flatten(x, start_dim=1)
         logits = self.net(flattened_x)
-        print(x.shape)
-        print(flattened_x.shape)
-        print(logits.shape)
         return F.log_softmax(logits, dim=1)
 
     def get_loss(self, pred, label):
