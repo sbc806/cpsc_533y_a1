@@ -70,8 +70,8 @@ class FcNet(nn.Module):
     def _init_weights_he(self, module):
         if isinstance(module, torch.nn.Linear):
             print('initializing He weights in {}'.format(module.__class__.__name__))
-            nn.init.xavier_uniform(module.weight)
-            nn.init.xavier_uniform(module.bias)
+            nn.init.xavier_uniform_(module.weight)
+            nn.init.xavier_uniform_(module.bias)
 
     def forward(self, x):
         """Forward pass.
