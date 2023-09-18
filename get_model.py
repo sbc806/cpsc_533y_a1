@@ -47,14 +47,31 @@ class FcNet(nn.Module):
         self.net = nn.Sequential(model_layers)
 
         # init weights
-        self.apply(self._init_weights)
-        
+        if config.init == 'uniform':
+            self.apply(self._init_weights)
+        elif config.init == "normal":
+            self.apply(self._init_weights_normal)
+        elif config.init == "he":
+            self.apply(self._init_weights_he)
+
     def _init_weights(self, module):
         if isinstance(module, torch.nn.Linear):
             # apply a uniform distribution to the weights and bias
             print('initializing weights in {}'.format(module.__class__.__name__))
             module.weight.data.uniform_(-1, 1)
             module.bias.data.uniform_(-1, 1)
+
+    def _init_weights_normal(self,module):
+        if isinstance(module, torch.nn.Linear):
+            print('initializing normal weights in {}'.format(module.__class__.__name__))
+            nn.init.normal_(module.weight)
+            nn.init.normal_(module.bias)
+
+    def _init_weights_he(self, module):
+        if isinstance(module, torch.nn.Linear):
+            print('initializing He weights in {}'.format(module.__class__.__name__))
+            nn.init.xavier_uniform(module.weight)
+            nn.init.xavier_uniform(module.bias)
 
     def forward(self, x):
         """Forward pass.
