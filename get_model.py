@@ -79,6 +79,7 @@ class FcNet(nn.Module):
         Args:
             x (array): BxNx2, input tensor.
         """
+        print(x[0:5,0:5,:])
         if self.config.order_pts:
             # TODO: Order point clouds according to its x coordinates.
             #
@@ -87,7 +88,8 @@ class FcNet(nn.Module):
             sorted_tensor, indices = torch.sort(x[:,:,0:1], dim=1)
             sorted_indices = torch.cat((indices, indices), dim=-1)
             x = torch.gather(x, dim=1, index=sorted_indices)
-
+        print('Sorted')
+        print(x[0:5,0:5,:])
         # TODO: Define the forward  pass and get the logits for classification.
         flattened_x = torch.flatten(x, start_dim=1)
         logits = self.net(flattened_x)
