@@ -43,7 +43,9 @@ def get_dataloader(config, mode):
         print(f"Number of valid samples: {num_all - num_tr}")
         
         # Create the two subsets after shuffling
-        random_ordering = torch.randperm(num_all)
+        # random_ordering = torch.randperm(num_all)
+        weights = torch.ones(num_all)
+        random_ordering = torch.multinomial(weights, num_all, replacement=False)
         train_subset = Subset(dataset, random_ordering[0:num_tr])
         val_subset = Subset(dataset, random_ordering[num_tr:])
         # Create the data loaders
@@ -64,8 +66,10 @@ def get_dataloader(config, mode):
         print(f"Number of single batch samples: {num_all}")
 
         # Get a random single batch from the dataset
-        random_ordering = torch.randperm(len(dataset))
-        batch_subset = Subset(dataset, random_ordering[0: num_all])
+        # random_ordering = torch.randperm(len(dataset))
+        weights = torch.ones(len(dataset))
+        random_indices = torch.multinomial(weights, num_all, replacement=False)
+        batch_subset = Subset(dataset, random_indices)
         batch_loader = loader(dataset=batch_subset, shuffle=True)
         loader_list.append(batch_loader)
     else:
@@ -121,8 +125,12 @@ class MnistptsDataset(data.Dataset):
         #   especially true if you use numpy to sample. Use PyTorch!
         if self.random_sample:
             # pass
-            random_ordering = torch.randperm(len(self.pts_list))
-            pts_sampled = self.pts_list[random_ordering[0: num_pts]]
+            weights = torch.ones(pts.shape[0])
+            sample_indices = torch.multinomial(weights, num_pts)
+            print(sample_indices)
+            pts_sampled = self.pts_list[sample_indices]
+            # random_ordering = torch.randperm(len(self.pts_list))
+            # pts_sampled = self.pts_list[random_ordering[0: num_pts]]
         else:
             # pass
             pts_sampled = self.pts_list[0: num_pts]
