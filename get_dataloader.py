@@ -126,16 +126,13 @@ class MnistptsDataset(data.Dataset):
         if self.random_sample:
             # pass
             weights = torch.ones(pts.shape[0])
-            self.sample_indices = torch.multinomial(weights, num_pts)
-            print(self.sample_indices)
-            pts_sampled = pts[self.sample_indices]
+            sample_indices = torch.multinomial(weights, num_pts)
+            pts_sampled = pts[sample_indices]
             # random_ordering = torch.randperm(len(self.pts_list))
             # pts_sampled = self.pts_list[random_ordering[0: num_pts]]
         else:
             # pass
-            self.sample_indices = torch.arange(num_pts)
-            print(self.sample_indices)
-            pts_sampled = pts[self.sample_indices]
+            pts_sampled = pts[0: num_pts]
 
         return pts_sampled
 
@@ -145,9 +142,7 @@ class MnistptsDataset(data.Dataset):
         # TODO: get item from dataset.
         # Note that we expect: pc (np.float32 type), label(np.int)
         individual_pc = self.pts_list[index]
-        individual_pc_labels = self.labels[index]
+        individual_pc_label = self.labels[index]
         data = {"pc": self.random_sampling(individual_pc, self.num_pts),
-                "label": individual_pc_labels[self.sample_indices]}
-        print(self.sample_indices)
-        print('\n')
+                "label": individual_pc_label}
         return data
