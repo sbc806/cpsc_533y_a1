@@ -71,7 +71,7 @@ class FcNet(nn.Module):
         if isinstance(module, torch.nn.Linear):
             print('initializing He weights in {}'.format(module.__class__.__name__))
             nn.init.xavier_uniform_(module.weight)
-            module.bias.data.uniform_(-0.1, 0.1)
+            module.bias.data.fill_(0.0)
 
     def forward(self, x):
         """Forward pass.
