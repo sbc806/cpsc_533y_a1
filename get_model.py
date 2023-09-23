@@ -45,6 +45,8 @@ class FcNet(nn.Module):
                 model_layers[f'ReLU-{i}'] = nn.ReLU(inplace=True)
             elif self.activation == "elu":
                 model_layers[f'ELU-{i}'] = nn.ELU(inplace=True)
+            elif self.activation == "leaky_relu":
+                model_layers[f'LeakyReLU'] = nn.LeakyReLU(inplace=True)
             elif self.activation == 'tanh':
                 model_layers[f'Tanh-{i}'] = nn.Tanh()
 
@@ -94,7 +96,7 @@ class FcNet(nn.Module):
         if isinstance(module, torch.nn.Linear):
             print('1_initializing He weights in {}'.format(module.__class__.__name__))
             nn.init.xavier_uniform_(module.weight)
-            module.bias.data.fill_(1.0)
+            module.bias.data.fill_(0.01)
 
     def _init_weights_he(self, module):
         if isinstance(module, torch.nn.Linear):
@@ -106,7 +108,7 @@ class FcNet(nn.Module):
         if isinstance(module, torch.nn.Linear):
             print('1_actually initializing He weights in {}'.format(module.__class__.__name__))
             nn.init.kaiming_normal_(module.weight, nonlinearity=self.activation)
-            module.bias.data.fill_(1.0)
+            module.bias.data.fill_(0.01)
 
     def forward(self, x):
         """Forward pass.
