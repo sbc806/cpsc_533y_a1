@@ -30,13 +30,24 @@ class FcNet(nn.Module):
         #
         # Hint: nn.Sequential().
         
+        if "activation" in config:
+            activation = config.activation
+        else:
+            activation = 'relu'
+        print(activation)
         model_layers = OrderedDict()
         for i in range(0, len(outc_list)):
             if i == 0:
                 model_layers[f'Linear-{i}'] = nn.Linear(inc, outc_list[i], bias=True)
             else:
                 model_layers[f'Linear-{i}'] = nn.Linear(outc_list[i-1], outc_list[i], bias=True)
-            model_layers[f'ReLU-{i}'] = nn.ReLU(inplace=True)
+            if activation == 'relu':
+                model_layers[f'ReLU-{i}'] = nn.ReLU(inplace=True)
+            elif activation == "elu":
+                model_layers[f'ELU-{i}'] = nn.ELU(inplace=True)
+            elif activation == 'tanh':
+                model_layers[f'Tanh-{i}'] = nn.Tanh()
+
         model_layers['output'] = nn.Linear(outc_list[-1], num_classes, bias=True)
 
         # layer_sizes = [inc] + outc_list + [num_classes]
@@ -51,7 +62,11 @@ class FcNet(nn.Module):
             self.apply(self._init_weights)
         elif config.init == "normal":
             self.apply(self._init_weights_normal)
-        elif config.init == "he":
+        elif config.init == "xavier":
+            self.apply(self._init_weights_xaiver)
+        elif config.init == "xavier_1":
+            self.apply(self._init_weights_xavier_1)
+        elif config.init == 'he':
             self.apply(self._init_weights_he)
         elif config.init == "he_1":
             self.apply(self._init_weights_he_1)
@@ -69,16 +84,27 @@ class FcNet(nn.Module):
             nn.init.normal_(module.weight)
             nn.init.normal_(module.bias)
 
-    def _init_weights_he(self, module):
+    def _init_weights_xavier(self, module):
         if isinstance(module, torch.nn.Linear):
             print('initializing He weights in {}'.format(module.__class__.__name__))
             nn.init.xavier_uniform_(module.weight)
             module.bias.data.fill_(0.0)
 
-    def _init_weights_he_1(self, module):
+    def _init_weights_xavier_1(self, module):
         if isinstance(module, torch.nn.Linear):
             print('1_initializing He weights in {}'.format(module.__class__.__name__))
             nn.init.xavier_uniform_(module.weight)
+            module.bias.data.fill_(1.0)
+
+    def _init_weights_he(self, module):
+        if isinstance(module, torch.nn.Linear):
+            print('actually initializing He weights in {}'.format(module.__class__.__name__))
+            nn.init.kaiming_normal_(module.weight)
+            module.bias.data.fill_(0.0)
+
+    def _init_weights_he_1(self, module):
+        if isinstance(module, torch.nn.Linear):
+            print('1_actually initializing He weights in {}'.format(module.__class__.__name__))
             module.bias.data.fill_(1.0)
 
     def forward(self, x):
