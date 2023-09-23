@@ -11,8 +11,14 @@ class Network(object):
         """Initialize configuration."""
         self.config = config
         self.model = model
+        
+        if "weight_decay" in config:
+            optimizer_weight_decay = config.weight_decay
+        else:
+            optimizer_weight_decay = 0
+        print(optimizer_weight_decay)
         self.optimizer = torch.optim.Adam(
-            model.parameters(), lr=config.lr
+            model.parameters(), lr=config.lr, weight_decay=optimizer_weight_decay
         )
         if self.config.use_cuda:
             self.model.cuda()
