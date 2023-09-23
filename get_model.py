@@ -31,9 +31,9 @@ class FcNet(nn.Module):
         # Hint: nn.Sequential().
         
         if "activation" in config:
-            activation = config.activation
+            self.activation = config.activation
         else:
-            activation = 'relu'
+            self.activation = 'relu'
         print(activation)
         model_layers = OrderedDict()
         for i in range(0, len(outc_list)):
@@ -99,12 +99,13 @@ class FcNet(nn.Module):
     def _init_weights_he(self, module):
         if isinstance(module, torch.nn.Linear):
             print('actually initializing He weights in {}'.format(module.__class__.__name__))
-            nn.init.kaiming_normal_(module.weight)
+            nn.init.kaiming_normal_(module.weight, nonlinearity=self.activation)
             module.bias.data.fill_(0.0)
 
     def _init_weights_he_1(self, module):
         if isinstance(module, torch.nn.Linear):
             print('1_actually initializing He weights in {}'.format(module.__class__.__name__))
+            nn.init.kaiming_normal_(module.weight, nonlinearity=self.activation)
             module.bias.data.fill_(1.0)
 
     def forward(self, x):
