@@ -96,7 +96,7 @@ class MnistptsDataset(data.Dataset):
         self.num_pts = config.num_pts
         self.random_sample = config.random_sample
         print(f"loading {mode} datasets.")
-
+        
         # TODO: Our dataset is small. Load the entire dataset into memory to
         # avoid excessive disk access!
         self.pts_list, self.labels = mnist_helper.load_mnistpts(config.data_mnistpts_dir, mode)
@@ -133,7 +133,7 @@ class MnistptsDataset(data.Dataset):
         else:
             # pass
             pts_sampled = pts[0: num_pts]
-        print("pts_sampled.shape",pts_sampled.shape)
+        
         return pts_sampled
 
     def __getitem__(self, index):
@@ -143,7 +143,7 @@ class MnistptsDataset(data.Dataset):
         # Note that we expect: pc (np.float32 type), label(np.int)
         individual_pc = self.pts_list[index]
         individual_pc_label = self.labels[index]
-        print("individual_pcs.shape", individual_pc.shape)
+        
         data = {"pc": self.random_sampling(individual_pc, self.num_pts),
                 "label": individual_pc_label}
         return data
