@@ -45,8 +45,8 @@ class FcNet(nn.Module):
                 model_layers[f'Linear-{i}'] = nn.Linear(inc, outc_list[i], bias=True)
             else:
                 model_layers[f'Linear-{i}'] = nn.Linear(outc_list[i-1], outc_list[i], bias=True)
-                if use_batch_normalization:
-                    model_layers[f'BatchNorm1d-{i}'] = nn.BatchNorm1d(outc_list[i])
+            if use_batch_normalization:
+                model_layers[f'BatchNorm1d-{i}'] = nn.BatchNorm1d(outc_list[i])
             if self.activation == 'relu':
                 model_layers[f'ReLU-{i}'] = nn.ReLU(inplace=True)
             elif self.activation == "elu":
