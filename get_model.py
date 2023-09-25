@@ -25,15 +25,11 @@ class FcNet(nn.Module):
         self.config = config
         num_classes = config.num_classes
         outc_list = config.outc_list
-        print('Batch added')
+        
         # TODO: Compose the model according to configuration specs
         #
         # Hint: nn.Sequential().
         
-        if "use_input_batch_normalization" in config:
-            self.use_input_batch = config.input_batch
-        else:
-            self.use_input_batch = False
         if "use_batch_normalization" in config:
             use_batch_normalization = config.use_batch_normalization
         else:
@@ -49,8 +45,8 @@ class FcNet(nn.Module):
                 model_layers[f'Linear-{i}'] = nn.Linear(inc, outc_list[i], bias=True)
             else:
                 model_layers[f'Linear-{i}'] = nn.Linear(outc_list[i-1], outc_list[i], bias=True)
-            if use_batch_normalization:
-                model_layers[f'BatchNorm1d-{i}'] = nn.BatchNorm1d(outc_list[i])
+                if use_batch_normalization:
+                    model_layers[f'BatchNorm1d-{i}'] = nn.BatchNorm1d(outc_list[i])
             if self.activation == 'relu':
                 model_layers[f'ReLU-{i}'] = nn.ReLU(inplace=True)
             elif self.activation == "elu":
@@ -132,11 +128,6 @@ class FcNet(nn.Module):
             sorted_indices = torch.cat((indices, indices), dim=-1)
             x = torch.gather(x, dim=1, index=sorted_indices)
         # TODO: Define the forward  pass and get the logits for classification.
-        if self.use_input_batch:
-            x = x.permute(0, 2, 1)
-            self.input_batch_layer = nn.BatchNorm1d(2)
-            x = self.input_batch_layer(x)
-            x = x.permute(0, 2, 1)
         flattened_x = torch.flatten(x, start_dim=1)
         logits = self.net(flattened_x)
         return F.log_softmax(logits, dim=1)
