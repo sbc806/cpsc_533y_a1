@@ -98,8 +98,8 @@ class MnistptsDataset(data.Dataset):
         # TODO: Our dataset is small. Load the entire dataset into memory to
         # avoid excessive disk access!
         self.pts_list, self.labels = mnist_helper.load_mnistpts(config.data_mnistpts_dir, mode)
-        self.pts_list = torch.tensor(self.pts_list).astype(torch.float32)
-        self.labels = torch.tensor(self.labels).astype(torch.int64)
+        self.pts_list = torch.tensor(self.pts_list, dtype=torch.float32)
+        self.labels = torch.tensor(self.labels, dtype=torch.int64)
 
     def __len__(self):
         """Return the length of dataset."""
