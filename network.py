@@ -16,7 +16,6 @@ class Network(object):
             optimizer_weight_decay = config.weight_decay
         else:
             optimizer_weight_decay = 0
-        print(optimizer_weight_decay)
         self.optimizer = torch.optim.Adam(
             model.parameters(), lr=config.lr, weight_decay=optimizer_weight_decay
         )
