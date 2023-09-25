@@ -30,6 +30,14 @@ class FcNet(nn.Module):
         #
         # Hint: nn.Sequential().
         
+        if "input_batch" in config:
+            input_batch = config.input_batch
+        else:
+            input_batch = False
+        if "use_batch_normalization" in config:
+            use_batch_normalization = config.use_batch_normalization
+        else:
+            use_batch_normalization = False
         if "activation" in config:
             self.activation = config.activation
         else:
@@ -41,6 +49,8 @@ class FcNet(nn.Module):
                 model_layers[f'Linear-{i}'] = nn.Linear(inc, outc_list[i], bias=True)
             else:
                 model_layers[f'Linear-{i}'] = nn.Linear(outc_list[i-1], outc_list[i], bias=True)
+            if use_batch_normalization:
+                model_layers[f'BatchNorm1d-{i}'] = nn.BatchNorm1d(outc_list[i])
             if self.activation == 'relu':
                 model_layers[f'ReLU-{i}'] = nn.ReLU(inplace=True)
             elif self.activation == "elu":

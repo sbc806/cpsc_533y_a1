@@ -68,7 +68,7 @@ def get_dataloader(config, mode):
         weights = torch.ones(len(dataset))
         random_indices = torch.multinomial(weights, num_all, replacement=False)
         batch_subset = Subset(dataset, random_indices)
-        batch_loader = loader(dataset=batch_subset, shuffle=True)
+        batch_loader = loader(dataset=batch_subset, shuffle=False)
         loader_list.append(batch_loader)
     else:
         raise NotImplementedError
@@ -98,8 +98,8 @@ class MnistptsDataset(data.Dataset):
         # TODO: Our dataset is small. Load the entire dataset into memory to
         # avoid excessive disk access!
         self.pts_list, self.labels = mnist_helper.load_mnistpts(config.data_mnistpts_dir, mode)
-        self.pts_list = np.array(self.pts_list).astype(np.float32)
-        self.labels = np.array(self.labels).astype(int)
+        self.pts_list = torch.tensor(self.pts_list).astype(torch.float32)
+        self.labels = torch.tensor(self.labels).astype(torch.int64)
 
     def __len__(self):
         """Return the length of dataset."""
@@ -143,3 +143,16 @@ class MnistptsDataset(data.Dataset):
         data = {"pc": self.random_sampling(individual_pc, self.num_pts),
                 "label": individual_pc_label}
         return data
+    
+    def normalize_data(self):
+        if self.mode == "train":
+            mean = torch.mean(self.pts_list, dim=0)
+            var = torch.var(self.pts_list, dim=0)
+        else:
+            train_pts_list = mnist_helper.load_mnistpts(self.config.data_mnistpts_dir, "train")
+            mean = torch.mean(train_pts_list, dim=0)
+            var = torch.var(train_pts_list, dim=0)
+        
+        self.pts_list = self.pts_list - mean
+        self.pts_list = self.pts_list / var
+        
